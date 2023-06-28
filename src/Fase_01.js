@@ -14,7 +14,7 @@ class Fase_01 extends Phaser.Scene {
         this.load.tilemapTiledJSON('themap', 'map_prj/the_map.json');
 
         //load spritesheet boss
-        this.load.spritesheet('boss', 'assets/spritesheets/bossFinal.png',  { frameWidth: 90, frameHeight: 70});
+        this.load.spritesheet('boss', 'assets/spritesheets/bossFinal.png',  { frameWidth: 92, frameHeight: 95});
     }
 
     // função para criação dos elementos
@@ -35,11 +35,26 @@ class Fase_01 extends Phaser.Scene {
         this.player.has_bow = false;    // previne de atirar flechas
 
         //criação do boss
-        this.boss = this.physics.add.sprite(70*16, 20*16, 'boss', 638)
+        this.finalBoss = this.physics.add.sprite(70*16, 20*16, 'boss', 638)
 
         // criação da colisão com camadas
         this.wallsLayer.setCollisionBetween(0, 140, true);
         this.physics.add.collider(this.player, this.wallsLayer);
+
+        //boss animation
+        this.anims.create({
+            key: 'finalBoss',
+            frames: this.anims.generateFrameNumbers('boss', {start: 0, end: 4}),
+            frameRate: 12,
+            repeat: -1,
+            //repeatDelay: 10,
+            //yoyo: true
+            });
+
+        this.finalBoss.play('finalBoss');
+        this.finalBoss.body.immovable = true;
+        
+        this.physics.add.collider(this.player, this.finalBoss);
 
         // ligação das teclas de movimento
         this.keyA = this.input.keyboard.addKey('A');
@@ -54,15 +69,6 @@ class Fase_01 extends Phaser.Scene {
         this.cameras.main.setZoom(1.9);
         this.cameras.main.startFollow(this.player, true, 0.2, 0.2)
 
-        //boss animation
-        this.anims.create({
-            key: 'boss',
-            frames: this.anims.generateFrameNumbers('boss', {}),
-            frameRate: 12,
-            repeat: -1,
-            repeatDelay: 500,
-            yoyo: true
-            });
 
         // criação das zonas
         this.zone_dlg = this.add.zone(100, 100).setSize(70, 100);
